@@ -17,10 +17,17 @@ android {
     }
 }
 
-task jar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
+
+task clearJar(type: Delete) {
+    delete 'build/outputs/internet-access.jar'
 }
 
+task makeJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('build/outputs/')
+    include('classes.jar')
+    rename ('classes.jar', 'internet-access.jar')
+}
 dependencies {
     compile 'com.android.support:support-v4:22.0.0'
 }
