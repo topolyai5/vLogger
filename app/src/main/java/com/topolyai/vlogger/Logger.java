@@ -10,6 +10,8 @@ import java.util.Locale;
 import android.os.Environment;
 import android.util.Log;
 
+import static java.lang.String.format;
+
 public class Logger {
 
     private static Configure configure;
@@ -28,39 +30,43 @@ public class Logger {
         tag = clazz.getSimpleName();
     }
 
-    public void i(String message) {
+    public void i(String message, Object ... args) {
+        String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.i(tag, message);
+            Log.i(tag, formatted);
         }
         if (configure.logFile()) {
-            appendLog(formatMsg(message, "INFO"));
+            appendLog(formatMsg(formatted, "INFO"));
         }
     }
 
-    public void w(String message) {
+    public void w(String message, Object ... args) {
+        String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.w(tag, message);
+            Log.w(tag, formatted);
         }
         if (configure.logFile()) {
             appendLog(formatMsg(message, "WARN"));
         }
     }
 
-    public void e(String message) {
+    public void e(String message, Object ... args) {
+        String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.e(tag, message);
+            Log.e(tag, formatted);
         }
         if (configure.logFile()) {
-            appendLog(formatMsg(message, "ERROR"));
+            appendLog(formatMsg(formatted, "ERROR"));
         }
     }
 
-    public void e(String message, Throwable tr) {
+    public void e(String message, Throwable tr, Object ... args) {
+        String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.e(tag, message, tr);
+            Log.e(tag, formatted, tr);
         }
         if (configure.logFile()) {
-            appendLog(formatMsg(message, "ERROR"));
+            appendLog(formatMsg(formatted, "ERROR"));
             appendLog(Log.getStackTraceString(tr));
         }
     }
@@ -76,12 +82,13 @@ public class Logger {
         return sdf.format(System.currentTimeMillis());
     }
 
-    public void d(String message) {
+    public void d(String message, Object ... args) {
+        String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.d(tag, message);
+            Log.d(tag, formatted);
         }
         if (configure.logFile()) {
-            appendLog(formatMsg(message, "DEBUG"));
+            appendLog(formatMsg(formatted, "DEBUG"));
         }
     }
 

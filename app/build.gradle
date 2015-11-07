@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '22.0.0'
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
 
     buildTypes {
@@ -23,11 +23,18 @@ task clearJar(type: Delete) {
 }
 
 task makeJar(type: Copy) {
+    def artifact = "vlogger"
+    def group = "com.topolyai"
+    def version = "0.1.0"
+    def fileName = artifact + '-' + version + '.jar'
+
     from('build/intermediates/bundles/release/')
-    into('build/outputs/')
+    def userHome = System.getProperty("user.home")
+    String outputDir = userHome + "/.m2/repository/" + group.replaceAll("\\.", '/') + File.separator + artifact + File.separator + version
+    into(outputDir)
     include('classes.jar')
-    rename ('classes.jar', 'internet-access.jar')
+    rename('classes.jar', fileName)
 }
 dependencies {
-    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-v4:23.0.1'
 }
