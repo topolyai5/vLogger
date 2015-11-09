@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import static java.lang.String.format;
@@ -51,6 +52,7 @@ public class Logger {
     }
 
     public void e(String message, Object ... args) {
+
         String formatted = format(message, args);
         if (configure.logConsole()) {
             Log.e(tag, formatted);
@@ -61,7 +63,15 @@ public class Logger {
     }
 
     public void e(String message, Throwable tr, Object ... args) {
-        String formatted = format(message, args);
+        String msg;
+        if (!TextUtils.isEmpty(tr.getMessage())) {
+            msg = tr.getMessage();
+        } else if (tr.getCause() != null && !TextUtils.isEmpty(tr.getCause().getMessage())) {
+            msg = tr.getCause().getMessage();
+        } else {
+            msg = "Unexpected error, see stacktrace.";
+        }
+        String formatted = format(msg, args);
         if (configure.logConsole()) {
             Log.e(tag, formatted, tr);
         }
