@@ -107,9 +107,15 @@ public class Logger {
             File logFile = new File(Environment.getExternalStorageDirectory() + configure.logPath());
             if (!logFile.exists()) {
                 try {
+                    if (!logFile.getParentFile().exists()) {
+                        boolean success = logFile.getParentFile().mkdirs();
+                        if (!success) {
+                            Log.w("Logger", "Directory doesn't created.");
+                        }
+                    }
                     logFile.createNewFile();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.w("Logger", e.getMessage());
                 }
             }
             try {
