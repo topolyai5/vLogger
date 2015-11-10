@@ -103,7 +103,7 @@ public class Logger {
     }
 
     private void appendLog(String text) {
-        if (!configure.logPath().isEmpty()) {
+        if (!TextUtils.isEmpty(configure.logPath())) {
             File logFile = new File(Environment.getExternalStorageDirectory() + configure.logPath());
             if (!logFile.exists()) {
                 try {
