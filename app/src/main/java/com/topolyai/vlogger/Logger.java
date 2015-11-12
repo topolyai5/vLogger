@@ -64,7 +64,9 @@ public class Logger {
 
     public void e(String message, Throwable tr, Object ... args) {
         String msg;
-        if (!TextUtils.isEmpty(tr.getMessage())) {
+        if (!TextUtils.isEmpty(message)) {
+            msg = message;
+        } else if (!TextUtils.isEmpty(tr.getMessage())) {
             msg = tr.getMessage();
         } else if (tr.getCause() != null && !TextUtils.isEmpty(tr.getCause().getMessage())) {
             msg = tr.getCause().getMessage();
