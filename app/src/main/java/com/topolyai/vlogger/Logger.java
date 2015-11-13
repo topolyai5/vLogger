@@ -1,5 +1,12 @@
 package com.topolyai.vlogger;
 
+import android.content.Context;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.topolyai.vlogger.appender.Appender;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,62 +14,70 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
-
 import static java.lang.String.format;
 
 public class Logger {
 
     private static Configure configure;
 
-    private String tag;
+    private Class<?> tag;
 
-    public static void create(Configure configure) {
+    public static void create(Configure configure, Context context) {
         if (Logger.configure == null) {
             Logger.configure = configure;
+            configure.createAppenders();
+            configure.rootAppender(context);
         } else {
             throw new IllegalArgumentException("Cannot initialized the Logger twice.");
         }
     }
 
     private Logger(Class<?> clazz) {
-        tag = clazz.getSimpleName();
+        tag = clazz;
     }
 
-    public void i(String message, Object ... args) {
+    public void t(String message, Object... args) {
         String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.i(tag, formatted);
+            Log.v(tag.getSimpleName(), formatted);
         }
-        if (configure.logFile()) {
-            appendLog(formatMsg(formatted, "INFO"));
-        }
+        appendLog(formatMsg(formatted, "VERBOSE"), Appender.VERBOSE);
     }
 
-    public void w(String message, Object ... args) {
+    public void d(String message, Object... args) {
         String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.w(tag, formatted);
+            Log.d(tag.getSimpleName(), formatted);
         }
-        if (configure.logFile()) {
-            appendLog(formatMsg(message, "WARN"));
-        }
+        appendLog(formatMsg(formatted, "DEBUG"), Appender.DEBUG);
     }
 
-    public void e(String message, Object ... args) {
+    public void i(String message, Object... args) {
+        String formatted = format(message, args);
+        if (configure.logConsole()) {
+            Log.i(tag.getSimpleName(), formatted);
+        }
+        appendLog(formatMsg(formatted, "INFO"), Appender.INFO);
+    }
+
+    public void w(String message, Object... args) {
+        String formatted = format(message, args);
+        if (configure.logConsole()) {
+            Log.w(tag.getSimpleName(), formatted);
+        }
+        appendLog(formatMsg(message, "WARN"), Appender.WARN);
+    }
+
+    public void e(String message, Object... args) {
 
         String formatted = format(message, args);
         if (configure.logConsole()) {
-            Log.e(tag, formatted);
+            Log.e(tag.getSimpleName(), formatted);
         }
-        if (configure.logFile()) {
-            appendLog(formatMsg(formatted, "ERROR"));
-        }
+        appendLog(formatMsg(formatted, "ERROR"), Appender.ERROR);
     }
 
-    public void e(String message, Throwable tr, Object ... args) {
+    public void e(String message, Throwable tr, Object... args) {
         String msg;
         if (!TextUtils.isEmpty(message)) {
             msg = message;
@@ -75,18 +90,18 @@ public class Logger {
         }
         String formatted = format(msg, args);
         if (configure.logConsole()) {
-            Log.e(tag, formatted, tr);
+            Log.e(tag.getSimpleName(), formatted, tr);
         }
-        if (configure.logFile()) {
-            appendLog(formatMsg(formatted, "ERROR"));
-            appendLog(Log.getStackTraceString(tr));
-        }
+        appendLog(formatMsg(formatted, "ERROR"), Appender.ERROR, Log.getStackTraceString(tr));
+    }
+
+    public void f(String message, Object... args) {
+        String formatted = format(message, args);
+        appendLog(formatMsg(formatted, "FATAL"), Appender.FATAL);
     }
 
     private String formatMsg(String message, String level) {
-        String msgPattern = configure.msgPattern();
-        String msg = msgPattern.replaceAll("%d", formatDate()).replaceAll("%l", level).replaceAll("%m", message);
-        return msg;
+        return configure.msgPattern().replaceAll("%d", formatDate()).replaceAll("%l", level).replaceAll("%m", message);
     }
 
     private String formatDate() {
@@ -94,19 +109,20 @@ public class Logger {
         return sdf.format(System.currentTimeMillis());
     }
 
-    public void d(String message, Object ... args) {
-        String formatted = format(message, args);
-        if (configure.logConsole()) {
-            Log.d(tag, formatted);
-        }
-        if (configure.logFile()) {
-            appendLog(formatMsg(formatted, "DEBUG"));
-        }
+    private void appendLog(String text, int level) {
+        appendLog(text, level, null);
     }
 
-    private void appendLog(String text) {
-        if (!TextUtils.isEmpty(configure.logPath())) {
+    private void appendLog(String text, int level, String stackTrace) {
+        int l = configure.acceptAppender(tag, level);
+        if (!TextUtils.isEmpty(configure.logPath()) && configure.logFile() && l <= level) {
             File logFile = new File(Environment.getExternalStorageDirectory() + configure.logPath());
+
+            if (configure.fileArchiveStrategy().needArchive(logFile)) {
+                logFile.renameTo(new File(logFile + "_" + configure.fileArchiveStrategy().getPostfix()));
+                logFile.delete();
+            }
+
             if (!logFile.exists()) {
                 try {
                     if (!logFile.getParentFile().exists()) {
@@ -124,6 +140,10 @@ public class Logger {
                 BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
                 buf.append(text);
                 buf.newLine();
+                if (!TextUtils.isEmpty(stackTrace)) {
+                    buf.append(stackTrace);
+                    buf.newLine();
+                }
                 buf.close();
             } catch (IOException e) {
                 e.printStackTrace();
