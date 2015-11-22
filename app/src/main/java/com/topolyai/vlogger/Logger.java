@@ -28,7 +28,7 @@ public class Logger {
             configure.createAppenders();
             configure.rootAppender(context);
         } else {
-            throw new IllegalArgumentException("Cannot initialized the Logger twice.");
+            Log.i("Logger", "Cannot initialized the Logger twice.");
         }
     }
 
