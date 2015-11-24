@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static java.lang.String.format;
+import static com.topolyai.vlogger.FormatUtil.format;
 
 public class Logger {
 
@@ -101,7 +101,7 @@ public class Logger {
     }
 
     private String formatMsg(String message, String level) {
-        return configure.msgPattern().replaceAll("%d", formatDate()).replaceAll("%l", level).replaceAll("%m", message);
+        return configure.msgPattern().replaceAll("%%d%%", formatDate()).replaceAll("%%l%%", level).replaceAll("%%m%%", message.replace("$", "#"));
     }
 
     private String formatDate() {

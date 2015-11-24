@@ -21,7 +21,7 @@ public abstract class BaseLoggerConfigure implements Configure {
 
     @Override
     public String msgPattern() {
-        return "%d  %l %m";
+        return "%%d%%  %%l%% %%m%%";
     }
 
     @Override
