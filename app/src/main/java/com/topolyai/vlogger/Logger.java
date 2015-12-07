@@ -101,7 +101,11 @@ public class Logger {
     }
 
     private String formatMsg(String message, String level) {
-        return configure.msgPattern().replaceAll("%%d%%", formatDate()).replaceAll("%%l%%", level).replaceAll("%%m%%", message.replace("$", "#"));
+        return configure.msgPattern()
+                .replaceAll("%d", formatDate())
+                .replaceAll("%c", tag.getName())
+                .replaceAll("%l", level)
+                .replaceAll("%m", message.replace("$", "#"));
     }
 
     private String formatDate() {
@@ -152,6 +156,9 @@ public class Logger {
     }
 
     public static Logger get(Class<?> clazz) {
+        if (configure == null) {
+            configure = new GeneralLoggerConfigure();
+        }
         return new Logger(clazz);
     }
 
