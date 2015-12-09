@@ -11,21 +11,10 @@ public class FormatUtil {
             return message;
         }
 
-        Pattern compile = Pattern.compile("\\{\\}");
-        Matcher matcher = compile.matcher(message);
-
-        StringBuilder sb = new StringBuilder(message);
-        int i = 0;
-        boolean out = false;
-        while (matcher.find() && !out) {
-            if (i < args.length && args[i] != null) {
-                sb.replace(matcher.start(), matcher.end(), args[i].toString());
-            } else {
-                out = true;
-            }
-            i++;
+        for (Object arg : args) {
+            message = message.replace("{}", arg.toString());
         }
 
-        return sb.toString();
+        return message;
     }
 }
