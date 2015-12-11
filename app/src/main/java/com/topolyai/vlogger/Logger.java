@@ -23,12 +23,12 @@ public class Logger {
     private Class<?> tag;
 
     public static void create(Configure configure, Context context) {
-        if (Logger.configure == null) {
+        if (Logger.configure == null || Logger.configure instanceof InternalLoggerConfigure) {
             Logger.configure = configure;
             configure.createAppenders();
             configure.rootAppender(context);
         } else {
-            Log.i("Logger", "Cannot initialized the Logger twice.");
+            Log.i("Logger", "Logger cannot be initialized twice.");
         }
     }
 
@@ -157,7 +157,7 @@ public class Logger {
 
     public static Logger get(Class<?> clazz) {
         if (configure == null) {
-            configure = new GeneralLoggerConfigure();
+            configure = new InternalLoggerConfigure();
         }
         return new Logger(clazz);
     }

@@ -1,6 +1,6 @@
 package com.topolyai.vlogger;
 
-public class GeneralLoggerConfigure extends BaseLoggerConfigure {
+final class InternalLoggerConfigure extends BaseLoggerConfigure {
     @Override
     public String logPath() {
         return null;
