@@ -114,7 +114,10 @@ public class Logger {
     }
 
     private void appendLog(String text, int level) {
-        appendLog(text, level, null);
+        try {
+            appendLog(text, level, null);
+        } catch (Throwable e) {
+        }
     }
 
     private void appendLog(String text, int level, String stackTrace) {

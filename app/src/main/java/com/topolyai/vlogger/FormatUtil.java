@@ -1,5 +1,7 @@
 package com.topolyai.vlogger;
 
+import android.util.Log;
+
 public class FormatUtil {
 
     public static String format(String message, Object... args) {
@@ -11,7 +13,11 @@ public class FormatUtil {
         }
 
         for (Object arg : args) {
-            message = message.replaceFirst("\\{\\}", arg.toString());
+            try {
+                message = message.replaceFirst("\\{\\}", arg.toString());
+            } catch (Throwable e) {
+            }
+
         }
 
         return message;
