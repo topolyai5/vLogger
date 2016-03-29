@@ -65,7 +65,7 @@ public class Logger {
         if (configure.logConsole()) {
             Log.w(tag.getSimpleName(), formatted);
         }
-        appendLog(formatMsg(message, "WARN"), Appender.WARN);
+        appendLog(formatMsg(formatted, "WARN"), Appender.WARN);
     }
 
     public void e(String message, Object... args) {
