@@ -1,11 +1,11 @@
-package com.topolyai.vlogger;
+package io.vlogger;
 
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.topolyai.vlogger.appender.Appender;
+import io.vlogger.appender.Appender;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static com.topolyai.vlogger.FormatUtil.format;
+import static io.vlogger.FormatUtil.format;
 
 public class Logger {
 

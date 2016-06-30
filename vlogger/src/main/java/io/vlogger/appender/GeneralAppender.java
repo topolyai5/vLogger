@@ -1,4 +1,4 @@
-package com.topolyai.vlogger.appender;
+package io.vlogger.appender;
 
 public class GeneralAppender extends AbstractAppender {
 

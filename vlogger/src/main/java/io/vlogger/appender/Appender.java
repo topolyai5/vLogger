@@ -1,4 +1,4 @@
-package com.topolyai.vlogger.appender;
+package io.vlogger.appender;
 
 public interface Appender {
     int VERBOSE = 0;

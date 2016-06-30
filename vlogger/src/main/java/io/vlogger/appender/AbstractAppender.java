@@ -1,4 +1,4 @@
-package com.topolyai.vlogger.appender;
+package io.vlogger.appender;
 
 public abstract class AbstractAppender implements Appender {
 

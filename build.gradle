@@ -15,7 +15,7 @@ allprojects {
     }
 
 
-    group = 'com.topolyai'
+    group = 'io.vlogger'
     version = '1.0.0'
 }
 

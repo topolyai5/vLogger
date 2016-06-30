@@ -1,11 +1,11 @@
-package com.topolyai.vlogger;
+package io.vlogger;
 
 import android.content.Context;
 
-import com.topolyai.vlogger.appender.Appender;
-import com.topolyai.vlogger.appender.RootAppender;
-import com.topolyai.vlogger.archive.FileArchiveStrategy;
-import com.topolyai.vlogger.archive.RollingFileArchiveStrategy;
+import io.vlogger.appender.Appender;
+import io.vlogger.appender.RootAppender;
+import io.vlogger.archive.FileArchiveStrategy;
+import io.vlogger.archive.RollingFileArchiveStrategy;
 
 import java.util.ArrayList;
 import java.util.List;

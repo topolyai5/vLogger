@@ -1,6 +1,4 @@
-package com.topolyai.vlogger;
-
-import android.util.Log;
+package io.vlogger;
 
 public class FormatUtil {
 

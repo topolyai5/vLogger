@@ -1,4 +1,4 @@
-package com.topolyai.vlogger;
+package io.vlogger;
 
 final class InternalLoggerConfigure extends BaseLoggerConfigure {
     @Override

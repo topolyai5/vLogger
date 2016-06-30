@@ -1,8 +1,8 @@
-package com.topolyai.vlogger;
+package io.vlogger;
 
 import android.content.Context;
 
-import com.topolyai.vlogger.archive.FileArchiveStrategy;
+import io.vlogger.archive.FileArchiveStrategy;
 
 public interface Configure {
 
